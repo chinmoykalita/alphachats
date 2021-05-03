@@ -1,0 +1,179 @@
+{% extends 'AlphaChats/base.html' %}
+{% block css %}
+<style>
+    .container {
+        background-color: rgba(255, 255, 255, 0.877);
+
+        /* border: 1px solid grey; */
+        /* padding: 50px; */
+
+    }
+
+    .container form {
+        display: flex;
+
+    }
+
+    h5 h6 {
+        font-family: 'Ubuntu', sans-serif;
+    }
+</style>
+
+{% endblock %}
+{% block title %}
+AlphaChats
+{% endblock %}
+{% block body %}
+<div class="container">
+    <h5 class="py-2">Create a new room and start chatting anonymously!!</h5>
+    <br>
+    <form action="" method="POST" id="linkform">
+        <input type="hidden" name="csrfmiddlewaretoken"
+            value="fQEV848lVvymCZ7JxpeUci8XZhlXPA7HHem2o2xGVIsNMQWrhbyRXvCvDg6D23GT">
+        <input name="txt" placeholder="Type room name.." type="text" class="form-control" value="">
+        <button type="submit" id="testclick" class="btn btn-outline-primary" data-check="0">Create Room</button>
+    </form>
+
+
+    <div id="loader" class="d-flex justify-content-center my-2 visually-hidden">
+        <div class="spinner-grow text-danger mx-2" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+        <div class="spinner-grow text-warning mx-2" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+        <div class="spinner-grow text-info mx-2" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+    </div>
+    <h6 class="py-3" id="re"></h6>
+
+    <!-- already have a room  -->
+    <p>Already have a room <a href="#" data-bs-toggle="modal" data-bs-target="#exampleModal">join room</a></p>
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Join a room</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <!-- already have a room form  -->
+                    <form action="" method="POST" class="form-control" id="alreadyroom">
+                        <input type="text" name="jroom" id="nameroom" class="form-control" placeholder="enter room name"
+                            required>
+                </div>
+                <div class="modal-footer">
+
+                    <div id="joinspinner" class="spinner-border text-primary visually-hidden" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                    <p id="res"></p>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" id="alreadybtn" class="btn btn-primary">Join</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+    <br>
+    <h6>Suggestions:</h6>
+    <p>1. You can type a name for your room make sure <b>Room doesn't contain any spaces</b> and your room name should
+        be unique. </p>
+    <p>2. After completion creating your room, you will be redirected to your ChatRoom where you can chat
+        <b>anonymously</b>.
+    </p>
+    <p>3. You can share your room link to anyone whom you want to chat with.</p>
+    <p>4. If you find any issues regarding this website you can contact me at chinmoykalita210@gmail.com.</p>
+</div>
+
+{% endblock body %}
+{% block js %}
+<script>
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                // Does this cookie string begin with the name we want?
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+    const csrftoken = getCookie('csrftoken');
+
+
+    $(document).ready(function () {
+        $('#linkform').submit(ajax);
+        $('#alreadyroom').submit(ajaxall);
+    })
+    function ajax() {
+        event.preventDefault();
+        room_name = $('#linkform input[name=txt]').val();
+        if (room_name.trim() == "") { return; }
+        $('#loader').removeClass('visually-hidden');
+        $('#re').hide();
+        $.ajax({
+            type: "POST",
+            url: '/create_room',
+            data: {
+                room_name: room_name
+            },
+            headers: { 'X-CSRFToken': csrftoken },
+            success: function (response) {
+                if (response) {
+                    $('#loader').addClass("visually-hidden");
+                    $('#re').show();
+                    $('#re').html(response);
+                    if (response == "Success! You can chat now.") {
+                        var url = '/room-' + room_name
+                        setTimeout(() => {
+                            window.location = url;
+                        }, 1000);
+                    }
+
+                }
+            }
+
+        })
+
+    }
+
+    function ajaxall() {
+        event.preventDefault();
+        room_name = $('#nameroom').val();
+        $('#joinspinner').removeClass('visually-hidden');
+        $('#res').hide();
+        if (room_name.trim() == "") { return; }
+        url = `/room-${room_name}`;
+        $.get(url, function (data, status) {
+            if (data == "<p>Room doesn't exist</p>") {
+                $('#joinspinner').addClass("visually-hidden");
+                
+                $('#res').show();
+                $('#res').html(data);
+            }
+            else {
+                $('#res').html(`<p>joining ${room_name}</p>`)
+                setTimeout(() => {
+                    window.location = url;
+                }, 500);
+            }
+        })
+
+    }
+
+
+
+</script>
+{% endblock %}

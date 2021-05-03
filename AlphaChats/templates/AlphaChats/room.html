@@ -1,0 +1,330 @@
+{% extends 'AlphaChats/base.html' %}
+{% block title %}
+{{roomname}}
+{% endblock %}
+{% block css %}
+<style>
+    body {
+        background-color: #fff;
+        max-width: 100%;
+        overflow-x: hidden;
+
+    }
+
+    ::-webkit-scrollbar {
+        width: 10px
+    }
+
+    ::-webkit-scrollbar-track {
+        background: #eee
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background: #888
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+        background: #555
+    }
+
+    .wrapper {
+        height: 100vh;
+        width: 100vw;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: #a3a3a3;
+    }
+
+    .main {
+        background-color: #eee;
+        width: 800px;
+        position: relative;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px 0 rgb(0 0 0 / 20%), 0 6px 20px 0 rgb(0 0 0 / 19%);
+        padding: 6px 0px 0px 0px;
+        margin-top: 0px;
+    }
+    .mx-5 {
+        margin-right: 3rem!important;
+        margin-left: 3rem!important;
+        margin-left: auto!important;
+    
+}
+
+    @media only screen and (max-width: 450px) {
+        .ow{
+            color: rgb(0, 0, 0);
+            margin-top: 0;
+        }
+        .main {
+            background-color: #eee;
+            width: 100vw;
+            position: relative;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px 0 rgb(0 0 0 / 20%), 0 6px 20px 0 rgb(0 0 0 / 19%);
+            padding: 6px 0px 0px 0px;
+            margin-top: -3.5rem;
+        }
+        .form-control {
+            font-size: 16px!important;
+            font-weight: 400!important;
+            width: 84vw!important;
+            /*height: 36px!important;*/
+            /*border: none!important;*/
+        }
+        /*.navbar {
+            border-bottom-left-radius: 8px;
+            border-bottom-right-radius: 8px;
+            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+            position: fixed;
+        }*/
+        
+        
+    } 
+
+    .scroll {
+        display: flex;
+        flex-direction: column;
+        /*direction:rtl; */
+        overflow-y: scroll;
+        scroll-behavior: smooth;
+        height: 454px;
+    }
+
+    .img1 {
+        border-radius: 50%;
+        background-color: #66BB6A;
+
+    }
+
+    .name {
+        font-size: 14px
+    }
+
+    .msg {
+        background-color: #fff;
+        font-size: 18px;
+        padding: 5px;
+        border-radius: 5px;
+        font-weight: 500;
+        color: #3e3c3c
+    }
+
+    .between {
+        font-size: 13px;
+        font-weight: 500;
+        color: #a09e9e
+    }
+
+    .navbar {
+        border-bottom-left-radius: 8px;
+        border-bottom-right-radius: 8px;
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)
+    }
+
+    .form-control {
+        font-size: 16px;
+        font-weight: 400;
+        width: 54vw;
+        height: 30px;
+        border: none
+    }
+
+    .form-control: focus {
+        box-shadow: none;
+        overflow: hidden;
+        border: none;
+    }
+
+    .form-control:focus {
+        box-shadow: none !important
+    }
+
+    .icon1 {
+        color: #7C4DFF !important;
+        font-size: 18px !important;
+        cursor: pointer
+    }
+
+    .icon2 {
+        color: #512DA8 !important;
+        font-size: 18px !important;
+        position: relative;
+        left: 8px;
+        padding: 0px;
+        cursor: pointer
+    }
+
+    .icondiv {
+        border-radius: 50%;
+        width: 15px;
+        height: 15px;
+        padding: 2px;
+        position: relative;
+        bottom: 1px
+    }
+</style>
+
+{% endblock %}
+
+{% block body %}
+<div class="wrapper">
+    <div class="main">
+        <h3 class="d-flex justify-content-center ow">{{roomname}}</h3>
+        <div id="msgs" class="px-2 scroll">
+
+
+            <!-- <div id="joined" class="text-center visually-hidden"><span class="between">Call started at 10:47am</span></div> -->
+            <!-- <div class="text-center"><span class="between">Call ended at 11:03am</span></div> -->
+            <!-- me -->
+            <!-- {% for c in chats %}
+            <div class="d-flex align-items-center text-right justify-content-end ">
+                <div class="pr-2"> <span class="name">{{c.time}}</span>
+                    <p class="msg">{{c.message}}</p>
+                </div>
+                <div><img src="https://i.imgur.com/HpF4BFG.jpg" width="30" class="img1" /></div>
+            </div>
+
+            {% endfor %} -->
+
+
+            <!-- him -->
+            <!-- <div class="d-flex align-items-center">
+                <div class="text-left pr-1"><img src="https://img.icons8.com/color/40/000000/guest-female.png"
+                        width="30" class="img1" /></div>
+                <div class="pr-2 pl-1"> <span class="name">Sarah Anderson</span>
+                    <p class="msg">How often should i take this?</p>
+                </div>
+            </div> -->
+        </div>
+
+        <!-- form  -->
+        <nav class="navbar bg-white navbar-expand-sm d-flex justify-content-between">
+
+            <form action="" method="post" id="linkform">
+                <div style="display: flex;">
+                    <input type="text" id="mg" class="form-control" placeholder="Type a message..." value="">
+                    <input type="hidden" name="csrfmiddlewaretoken"
+                        value="cgiUq2HDRCnN2FsAlfY92UPrElHLiNLVEE01G06YRPhecwhi51i6N7jZiksrvgk7">
+                    <button id="testclick"
+                        class="btn btn-sm btn-primary justify-content-center mx-5 justify-content-end"
+                        data-check="0">send</button>
+                </div>
+            </form>
+        </nav>
+    </div>
+</div>
+<!-- <div id="joined" class="position-fixed bottom-0 end-0 p-3" style="z-index: 5">
+
+</div> -->
+
+{% endblock body %}
+{% block js %}
+<script>
+
+    let person = prompt("Please enter your name");
+    if(person == "null" || person == null || person == "" ){
+        person = "anonymous";
+
+    }
+    function htmlEntities(str) {
+    return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+    }
+    // if(person){
+    //     document.getElementById('joined').innerHTML =  `<div id="liveToast" class="toast hide" role="alert" aria-live="assertive" aria-atomic="true">
+    //       <div class="toast-header">
+    //         <img src="..." class="rounded me-2" alt="...">
+    //         <strong class="me-auto">Bootstrap</strong>
+    //         <small>11 mins ago</small>
+    //         <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+    //       </div>
+    //       <div class="toast-body">
+    //         ${person} joined
+    //       </div>
+    //     </div>`;
+    //     setInterval(() => {
+    //         document.getElementById('joined').innerHTML = "";
+    //     }, 1500);
+    // }
+
+
+    // gettin csrf token 
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                // Does this cookie string begin with the name we want?
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
+
+
+
+    $(document).ready(function () {
+        $('#linkform').submit(sendmsgs)
+        setInterval(() => {
+            fetchmsgs()
+        }, 700);
+
+    })
+
+    const room_name = '{{roomname}}';
+
+    function fetchmsgs() {
+        let csrftoken = getCookie('csrftoken');
+        $.ajax({
+            type: 'POST',
+            url: 'chatwork',
+            data: {
+                room_name: room_name,
+            },
+            headers: { 'X-CSRFToken': csrftoken },
+
+            success: function (chats) {
+                if (chats) {
+                    // console.log('working');
+                    $('#msgs').html(chats);
+                    var messageBody = document.querySelector('#msgs');
+                    messageBody.scrollTop = messageBody.scrollHeight - messageBody.clientHeight;
+                }
+                // else{console.log('no response');}
+            }
+        })
+
+    };
+    function sendmsgs() {
+        let csrftoken = getCookie('csrftoken');
+        event.preventDefault();
+        message = $('#mg').val();
+        document.getElementById('mg').value = "";
+        if (message.trim() == "") { return; }
+        $.ajax({
+            type: "POST",
+            url: 'getchat',
+            data: {
+                room_name: room_name,
+                message: htmlEntities(message),
+                person: htmlEntities(person),
+            },
+            // headers:{'X-CSRF':csrftoken},
+            success: function () {
+                var a = 2;
+
+            }
+        })
+
+    }
+
+
+
+</script>
+{% endblock js %}
